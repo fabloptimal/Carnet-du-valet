@@ -188,7 +188,7 @@
   /* ---------- puzzle pivotant 4×4 ---------- */
   function vuePuzzle(c, code) {
     app.innerHTML = bandeau() + '<div class="fiche"><h2>' + esc(c.titre || "Puzzle") + "</h2>" +
-      '<p class="consigne">Touchez une pièce pour la faire tourner. Remettez toutes les pièces à l\'endroit.</p>' +
+      '<p class="consigne">Touchez une pièce pour la faire tourner. Faites-la glisser sur une autre pour les échanger.</p>' +
       '<div class="puzzle-zone" id="zone"><div class="puzzle" id="puzzle"></div></div><div id="fin"></div></div>';
     var img = new Image();
     img.onload = function () {
@@ -201,33 +201,69 @@
     img.src = c.image;
   }
   function monterPuzzle(c, code, url) {
-    var grille = document.getElementById("puzzle"), rot = [];
-    for (var i = 0; i < 16; i++) rot.push(1 + Math.floor(Math.random() * 3));
-    melange([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]).slice(0, 2).forEach(function (k) { rot[k] = 0; });
-    var angles = rot.map(function (r) { return r * 90; });
-    for (var k = 0; k < 16; k++) {
+    // Comme le puzzle d'Opération Némésis : pièces mélangées dans le cadre ET tournées.
+    // Toucher = tourner d'un quart de tour ; glisser = échanger avec la pièce d'arrivée.
+    var grille = document.getElementById("puzzle"), N = 16;
+    var pos = melange(Array.from({ length: N }, function (_, i) { return i; }));  // pos[case] = pièce
+    var rot = [], angles = [], tuiles = [];
+    for (var i = 0; i < N; i++) { rot.push(Math.floor(Math.random() * 4)); }
+    if (pos.every(function (p, s) { return p === s; })) { var x = pos[0]; pos[0] = pos[1]; pos[1] = x; }
+    rot.forEach(function (r, i) { angles[i] = r * 90; });
+    function placer() { pos.forEach(function (p, s) { tuiles[p].style.order = s; }); }
+    function tourner(p) { rot[p] = (rot[p] + 1) % 4; angles[p] += 90; tuiles[p].style.transform = "rotate(" + angles[p] + "deg)"; }
+    function verifier() {
+      if (!pos.every(function (p, s) { return p === s && rot[p] === 0; })) return;
+      grille.classList.add("resolu"); noter(code, true);
+      setTimeout(function () { tamponner(document.getElementById("zone"), "ÉLUCIDÉ"); }, 900);
+      setTimeout(function () {
+        document.getElementById("fin").innerHTML = '<p class="recit apparait">' + esc(c.fin) + "</p>" +
+          '<button class="btn discret" style="color:var(--encre);border-color:#0003" data-go="#/">Accueil</button>';
+        liens();
+      }, 1500);
+    }
+    for (var k = 0; k < N; k++) {
       var t = document.createElement("button");
       t.className = "tuile"; t.setAttribute("aria-label", "Pièce " + (k + 1));
       t.style.backgroundImage = "url(" + url + ")";
       t.style.backgroundPosition = ((k % 4) * 100 / 3) + "% " + (Math.floor(k / 4) * 100 / 3) + "%";
       t.style.transform = "rotate(" + angles[k] + "deg)";
-      (function (k, t) {
-        t.addEventListener("click", function () {
-          if (grille.classList.contains("resolu")) return;
-          rot[k] = (rot[k] + 1) % 4; angles[k] += 90; t.style.transform = "rotate(" + angles[k] + "deg)";
-          if (rot.every(function (r) { return r === 0; })) {
-            grille.classList.add("resolu"); noter(code, true);
-            setTimeout(function () { tamponner(document.getElementById("zone"), "ÉLUCIDÉ"); }, 900);
-            setTimeout(function () {
-              document.getElementById("fin").innerHTML = '<p class="recit apparait">' + esc(c.fin) + "</p>" +
-                '<button class="btn discret" style="color:var(--encre);border-color:#0003" data-go="#/">Accueil</button>';
-              liens();
-            }, 1500);
-          }
-        });
-      })(k, t);
-      grille.appendChild(t);
+      t.dataset.p = k; tuiles.push(t); grille.appendChild(t);
     }
+    placer();
+    var geste = null; // { p, x, y, id, fantome }
+    grille.addEventListener("pointerdown", function (e) {
+      var t = e.target.closest(".tuile");
+      if (!t || grille.classList.contains("resolu") || geste) return;
+      e.preventDefault();
+      geste = { p: +t.dataset.p, x: e.clientX, y: e.clientY, id: e.pointerId, fantome: null };
+      try { grille.setPointerCapture(e.pointerId); } catch (er) {}
+    });
+    grille.addEventListener("pointermove", function (e) {
+      if (!geste || e.pointerId !== geste.id) return;
+      var dx = e.clientX - geste.x, dy = e.clientY - geste.y;
+      if (!geste.fantome && Math.hypot(dx, dy) < 10) return;
+      var t = tuiles[geste.p];
+      if (!geste.fantome) {
+        var r = t.getBoundingClientRect(), f = t.cloneNode(false);
+        f.className = "tuile fantome"; f.style.width = r.width + "px"; f.style.height = r.height + "px";
+        f.style.left = r.left + "px"; f.style.top = r.top + "px"; f.style.order = "";
+        document.body.appendChild(f); geste.fantome = f; geste.r = r; t.classList.add("partie"); vibre(20);
+      }
+      geste.fantome.style.translate = dx + "px " + dy + "px";
+    });
+    function fin(e, annule) {
+      if (!geste || e.pointerId !== geste.id) return;
+      var g = geste; geste = null;
+      if (!g.fantome) { if (!annule) { tourner(g.p); verifier(); } return; }
+      g.fantome.remove(); tuiles[g.p].classList.remove("partie");
+      if (annule) return;
+      var cible = document.elementFromPoint(e.clientX, e.clientY), t2 = cible && cible.closest && cible.closest(".tuile");
+      if (!t2 || !grille.contains(t2) || +t2.dataset.p === g.p) return;
+      var a = pos.indexOf(g.p), b = pos.indexOf(+t2.dataset.p);
+      pos[a] = +t2.dataset.p; pos[b] = g.p; placer(); vibre(30); verifier();
+    }
+    grille.addEventListener("pointerup", function (e) { fin(e, false); });
+    grille.addEventListener("pointercancel", function (e) { fin(e, true); });
   }
 
   /* ---------- memory 16 cartes ---------- */
