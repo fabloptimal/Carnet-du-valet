@@ -5,6 +5,7 @@ HTML/CSS/JS sans framework ni compilation : on ouvre `index.html`, c'est tout.
 
 ## Ce qu'elle fait
 - Choix de l'équipe (Rouge ♥, Bleue ♠, Verte ♣, Jaune ♦), mémorisé sur le téléphone.
+- **QR de départ** (page 1 de `qr.html`) : un par équipe, il contient l'adresse du jeu suivie de `#/depart/R` (ou B, V, J). Scanné avec l'appareil photo normal, il ouvre l'app déjà réglée sur la bonne équipe. C'est le seul QR qui contient une adresse.
 - Scanner de QR codes **intégré** (caméra), plus saisie manuelle du code écrit sous chaque QR.
 - 16 codes pour l'acte 1 : 8 puzzles photo pivotants, 4 memory, 4 pages texte (plafonds).
 - Un code d'une autre équipe affiche « Réservé à l'équipe … ».
@@ -37,6 +38,9 @@ HTML/CSS/JS sans framework ni compilation : on ouvre `index.html`, c'est tout.
 
 ## Tester sur le Mac
 Dans le Terminal, depuis ce dossier : `python3 -m http.server 8000`, puis ouvrir http://localhost:8000.
+
+## En ligne
+Le jeu est publié sur **https://fabloptimal.github.io/Carnet-du-valet/** (dépôt GitHub `fabloptimal/Carnet-du-valet`). Ne pas renommer le dépôt : l'adresse est imprimée dans les QR de départ (`adresse` dans `config.js`).
 
 ## Mettre en ligne (GitHub Pages)
 1. Créer un dépôt public sur github.com, par exemple `carnet-du-valet`.

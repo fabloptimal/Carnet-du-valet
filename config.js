@@ -10,7 +10,10 @@ self.TREFLE = {
 
   // Changer ce numéro à chaque mise en ligne d'une nouvelle version :
   // les téléphones rechargent alors tout le contenu.
-  version: "2026-10-17e",
+  version: "2026-10-17f",
+
+  // Adresse publique du jeu (sert aux 4 QR de départ). Ne plus la changer une fois les QR imprimés.
+  adresse: "https://fabloptimal.github.io/Carnet-du-valet/",
 
   equipes: {
     R: { nom: "Rouge", symbole: "♥", carte: "Cœur",    couleur: "#c8102e" },

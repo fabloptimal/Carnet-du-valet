@@ -53,6 +53,10 @@
     window.scrollTo(0, 0);
     if (h.indexOf("#/c/") === 0) return vueCode(decodeURIComponent(h.slice(4)));
     if (h === "#/scan") return vueScan();
+    var dep = h.match(/^#\/depart\/([A-Z])$/);
+    if (dep && C.equipes[dep[1]]) { // QR de départ : l'équipe est fixée par l'adresse
+      ecrire(CLE_EQUIPE, dep[1]); history.replaceState(null, "", "#/"); return route();
+    }
     if (h === "#/equipe") return vueChoix("#/");
     if (h === "#/qui-equipe") return vueChoix("#/qui");
     if (h === "#/qui") return vueQui();

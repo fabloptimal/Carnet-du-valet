@@ -31,6 +31,9 @@
   .code { font: 400 11pt "Special Elite", monospace; margin-top: 1.5mm; letter-spacing: .06em; color: #6b5a43; }
   .grande .code { font-size: 14pt; }
   .lieu { font-size: 7.5pt; color: #a99c86; margin-top: 1.5mm; }
+  .depart { width: 88mm; }
+  .depart .titre { font: 400 13pt "Special Elite", monospace; letter-spacing: .12em; margin-bottom: 2mm; }
+  .depart .consigne { font-size: 9.5pt; line-height: 1.35; margin-top: 2mm; color: #241c14; }
 </style>
 </head>
 <body>
@@ -81,6 +84,22 @@
       racine.appendChild(p);
     }
   }
+  // Les 4 QR de départ : une adresse, à scanner avec l'appareil photo normal du téléphone.
+  (function () {
+    var p = document.createElement("div"); p.className = "page";
+    Object.keys(C.equipes).forEach(function (e) {
+      var q = C.equipes[e], url = C.adresse + "#/depart/" + e;
+      var qr = qrcode(0, "M"); qr.addData(url); qr.make();
+      var d = document.createElement("div"); d.className = "carte petite depart"; d.style.borderColor = q.couleur;
+      d.innerHTML = '<div class="coin hg" style="color:' + q.couleur + '">' + q.symbole + '</div><div class="coin bd" style="color:' + q.couleur + '">' + q.symbole + "</div>" +
+        '<div class="titre">LE CARNET DU VALET</div>' + qr.createSvgTag({ scalable: true, margin: 2 }) +
+        '<div class="reserve">Départ — équipe ' + q.nom + "</div>" +
+        '<div class="consigne">Scanne ce code avec <b>l\'appareil photo</b> du téléphone de l\'équipe, puis attends « ✓ Prêt ».<br>Ensuite, tous les codes se scannent <b>dans l\'app</b>.</div>' +
+        '<div class="lieu">à remettre au briefing, dans le kit</div>';
+      p.appendChild(d);
+    });
+    racine.appendChild(p);
+  })();
   page(petites, "petite", 6);
   page(grandes, "grande", 1);
   page(regie, "petite", 1);
