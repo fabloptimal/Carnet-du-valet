@@ -1,0 +1,160 @@
+/* Charte « dossier d'enquête la nuit » : bleu nuit police, fiches de papier, kraft,
+   machine à écrire, tampon rouge, fil rouge du mur d'enquête. Un seul thème, sombre. */
+@font-face { font-family: "Special Elite"; src: url(fonts/special-elite-latin-400-normal.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "Plex Cond"; font-weight: 400; src: url(fonts/ibm-plex-sans-condensed-latin-400-normal.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "Plex Cond"; font-weight: 600; src: url(fonts/ibm-plex-sans-condensed-latin-600-normal.woff2) format("woff2"); font-display: swap; }
+
+:root {
+  --nuit: #15213a;
+  --nuit-fonce: #0d1628;
+  --kraft: #d6bb88;
+  --papier: #ece0c3;
+  --encre: #241c14;
+  --sepia: #6b5a43;
+  --tampon: #a3201b;
+  --fil: #c4161c;
+  --laiton: #b8913f;
+  --equipe: #b8913f;
+  --machine: "Special Elite", "American Typewriter", "Courier New", monospace;
+  --interface: "Plex Cond", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; background: var(--nuit); color: var(--papier); }
+body {
+  font: 400 18px/1.45 var(--interface);
+  min-height: 100vh; min-height: 100dvh;
+  background-image: radial-gradient(ellipse at 50% -10%, #2a3d63 0%, transparent 65%);
+  background-attachment: fixed;
+  padding: env(safe-area-inset-top) max(16px, env(safe-area-inset-right)) env(safe-area-inset-bottom) max(16px, env(safe-area-inset-left));
+  -webkit-user-select: none; user-select: none;
+}
+main { max-width: 560px; margin: 0 auto; padding: 16px 0 36px; display: grid; gap: 14px; }
+h1, h2 { font-family: var(--machine); font-weight: 400; margin: 0; text-wrap: balance; color: var(--kraft); }
+h1 { font-size: 32px; line-height: 1.12; }
+h2 { font-size: 23px; line-height: 1.2; }
+p { margin: 0; }
+.petit { font-size: 15px; color: #b8c0d4; }
+:focus-visible { outline: 3px solid var(--laiton); outline-offset: 3px; }
+
+/* Bandeau : onglet de l'équipe */
+.bandeau { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; border-bottom: 2px solid #ffffff1c; }
+.onglet { background: var(--equipe); color: #fff; font: 600 16px var(--interface); padding: 6px 14px 5px; border-radius: 8px 8px 0 0; }
+.lien { background: none; border: 0; color: #c9d0e0; font: inherit; font-size: 16px; text-decoration: underline; padding: 8px 0; cursor: pointer; }
+
+/* Boutons */
+.btn {
+  display: block; width: 100%; padding: 16px 18px;
+  font: 600 19px/1.2 var(--interface); color: var(--encre);
+  background: var(--papier); border: 0; border-radius: 10px; cursor: pointer; text-align: center;
+}
+.btn:active { transform: translateY(1px); filter: brightness(.95); }
+.btn.principal { background: var(--equipe); color: #fff; font-size: 21px; padding: 20px; box-shadow: 0 6px 18px #0006; }
+.btn.discret { background: transparent; color: var(--papier); border: 1.5px solid #ffffff40; }
+
+/* Choix d'équipe : quatre cartes à jouer */
+.equipes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.equipes button {
+  background: var(--papier); border: 0; border-radius: 10px; cursor: pointer; aspect-ratio: 5 / 6;
+  display: grid; grid-template-rows: auto 1fr auto; padding: 10px 12px; box-shadow: 0 8px 18px #0007;
+  font: 400 17px var(--machine); text-align: left;
+}
+.equipes .sym { font-size: 60px; line-height: 1; display: grid; place-items: center; }
+.equipes .nom { font: 600 19px var(--interface); color: var(--encre); text-align: center; }
+
+/* Fiche de papier */
+.fiche {
+  position: relative; background: var(--papier); color: var(--encre); border-radius: 3px;
+  border-top: 7px solid var(--equipe); padding: 16px 16px 18px; box-shadow: 0 14px 30px #0009;
+  display: grid; gap: 12px;
+}
+.fiche h2 { color: var(--encre); font-size: 21px; }
+.fiche .consigne { font-size: 16px; color: var(--sepia); }
+.recit { font: 400 19px/1.5 var(--machine); color: var(--encre); }
+.anagramme { display: block; margin-top: 8px; font: 600 30px var(--interface); letter-spacing: .26em; text-align: center; word-break: break-word; }
+
+/* Tampon */
+.tampon {
+  justify-self: start; display: inline-block; font: 400 24px var(--machine); color: var(--tampon); letter-spacing: .12em;
+  border: 3px solid var(--tampon); padding: 6px 14px 4px; border-radius: 4px; transform: rotate(-8deg);
+  background: #ece0c3cc; mix-blend-mode: multiply;
+}
+.tampon.frappe { animation: frappe .35s cubic-bezier(.2, 1.6, .4, 1) both; }
+@keyframes frappe { from { transform: rotate(-8deg) scale(2.2); opacity: 0; } to { transform: rotate(-8deg) scale(1); opacity: .92; } }
+.puzzle-zone { position: relative; }
+.puzzle-zone .tampon { position: absolute; right: 8px; bottom: 14px; }
+
+/* Fil de l'enquête */
+.enquete {
+  position: relative; background: #c9a77a; border-radius: 4px; padding: 18px 14px 18px 44px; display: grid; gap: 12px;
+  background-image: radial-gradient(#00000014 1px, transparent 1.2px); background-size: 6px 6px; box-shadow: 0 14px 30px #0009;
+}
+.enquete::before { content: ""; position: absolute; left: 23px; top: 28px; bottom: 28px; width: 3px; background: var(--fil); border-radius: 2px; }
+.indice { position: relative; background: var(--papier); color: var(--encre); padding: 8px 12px; font: 400 16px/1.3 var(--machine); box-shadow: 0 3px 6px #0005; }
+.indice:nth-child(odd) { transform: rotate(-1deg); } .indice:nth-child(even) { transform: rotate(.8deg); }
+.indice::before { content: ""; position: absolute; left: -28px; top: 50%; width: 14px; height: 14px; margin-top: -7px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ff6b6b, var(--fil) 55%, #6d0b0e); box-shadow: 0 2px 2px #0007; }
+.indice small { display: block; font: 400 14px var(--interface); color: var(--sepia); }
+.indice.manque { background: transparent; color: #3a2a1a; border: 2px dashed #3a2a1a88; box-shadow: none; transform: none; }
+.indice.manque::before { background: #3a2a1a55; box-shadow: none; }
+
+/* État hors ligne */
+.etat { font-size: 15px; padding: 10px 12px; border-radius: 8px; background: var(--nuit-fonce); border: 1px solid #ffffff14; }
+.etat.ok { color: #9fd8a8; }
+.etat.ko { color: #f0b37a; }
+
+/* Scanner */
+.scanner { position: relative; border-radius: 12px; overflow: hidden; background: #000; aspect-ratio: 3 / 4; max-width: 100%; }
+.scanner video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.scanner .viseur { position: absolute; inset: 18% 14%; border: 3px solid #fffc; border-radius: 14px; box-shadow: 0 0 0 9999px #0008; }
+.saisie { display: flex; gap: 8px; }
+.saisie input {
+  flex: 1; min-width: 0; padding: 14px; font: 600 18px var(--interface); border-radius: 10px; border: 0;
+  background: var(--papier); color: var(--encre); text-transform: uppercase; -webkit-user-select: text; user-select: text;
+}
+.saisie .btn { width: auto; padding: 14px 18px; }
+
+/* Puzzle pivotant */
+.puzzle {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; width: 100%; max-width: 100%; aspect-ratio: 1;
+  background: var(--encre); overflow: hidden; filter: grayscale(1) contrast(1.05) sepia(.15); transition: filter 1.2s ease; touch-action: manipulation;
+}
+.puzzle.resolu { filter: none; gap: 0; }
+.tuile { background-size: 400% 400%; background-repeat: no-repeat; cursor: pointer; transition: transform .18s ease; border: 0; padding: 0; }
+.puzzle.resolu .tuile { cursor: default; }
+
+/* Memory */
+.memory { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; touch-action: manipulation; }
+.carte { aspect-ratio: 3 / 4; max-width: 100%; perspective: 600px; border: 0; padding: 0; background: none; cursor: pointer; }
+.carte .in { position: relative; width: 100%; height: 100%; transition: transform .35s; transform-style: preserve-3d; }
+.carte.vue .in, .carte.trouvee .in { transform: rotateY(180deg); }
+.carte .face { position: absolute; inset: 0; border-radius: 6px; backface-visibility: hidden; -webkit-backface-visibility: hidden; overflow: hidden; }
+.carte .dos { background: repeating-linear-gradient(45deg, var(--nuit) 0 5px, #1c2c4d 5px 10px); border: 3px solid var(--kraft);
+  display: grid; place-items: center; color: var(--kraft); font-size: 26px; }
+.carte .recto { transform: rotateY(180deg); background: var(--papier); border: 3px solid var(--papier); }
+.carte .recto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.carte.trouvee .recto { border-color: var(--equipe); }
+.cadre-enfant { border: 2px dashed var(--sepia); border-radius: 8px; padding: 8px 10px; font-size: 16px; color: var(--encre); }
+
+/* Apparition de la fin d'épreuve */
+.apparait { animation: apparait .7s ease both; }
+@keyframes apparait { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* Refus */
+.refus { text-align: center; justify-items: center; }
+.refus .gros { font-size: 64px; line-height: 1; }
+.refus .tampon { justify-self: center; }
+
+/* Régie */
+.horloge {
+  font-family: var(--machine); font-variant-numeric: tabular-nums; text-align: center; color: var(--papier);
+  font-size: clamp(64px, 20vw, 170px); line-height: 1; margin: 10px 0 0;
+}
+.horloge.urgent { color: #ff6b6b; }
+.reglages { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.reglages .btn { padding: 12px 4px; font-size: 16px; }
+.message-corbeau { display: grid; gap: 8px; }
+.message-corbeau .fiche { display: none; }
+.message-corbeau.ouvert .fiche { display: grid; }
+
+@media (prefers-reduced-motion: reduce) { *, *::before { animation: none !important; transition: none !important; } }

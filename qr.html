@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QR codes à imprimer</title>
+<style>
+  @font-face { font-family: "Special Elite"; src: url(fonts/special-elite-latin-400-normal.woff2); }
+  @font-face { font-family: "Plex Cond"; font-weight: 400; src: url(fonts/ibm-plex-sans-condensed-latin-400-normal.woff2); }
+  @font-face { font-family: "Plex Cond"; font-weight: 600; src: url(fonts/ibm-plex-sans-condensed-latin-600-normal.woff2); }
+  @page { size: A4; margin: 12mm; }
+  * { box-sizing: border-box; }
+  body { font-family: "Plex Cond", Arial, sans-serif; color: #241c14; background: #fff; margin: 0;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .aide { padding: 16px; background: #ece0c3; margin-bottom: 16px; font-size: 15px; line-height: 1.5; }
+  @media print { .aide { display: none; } }
+  .page { page-break-after: always; break-after: page; display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; justify-items: center; align-content: start; }
+  .page.une { grid-template-columns: 1fr; }
+  .page:last-child { page-break-after: auto; break-after: auto; }
+  .carte { position: relative; border: 2.6mm solid; border-radius: 4mm; padding: 6mm 5mm 4mm; text-align: center; break-inside: avoid; }
+  .carte.petite { width: 88mm; }
+  .carte.grande { width: 180mm; padding-top: 9mm; }
+  .carte svg { display: block; margin: 0 auto; }
+  .petite svg { width: 52mm; height: 52mm; }
+  .grande svg { width: 150mm; height: 150mm; }
+  .coin { position: absolute; font-size: 15pt; line-height: 1; }
+  .coin.hg { top: 2mm; left: 2.5mm; } .coin.bd { bottom: 2mm; right: 2.5mm; transform: rotate(180deg); }
+  .grande .coin { font-size: 24pt; }
+  .reserve { font: 400 14pt "Special Elite", monospace; margin-top: 3mm; }
+  .grande .reserve { font-size: 22pt; }
+  .code { font: 400 11pt "Special Elite", monospace; margin-top: 1.5mm; letter-spacing: .06em; color: #6b5a43; }
+  .grande .code { font-size: 14pt; }
+  .lieu { font-size: 7.5pt; color: #a99c86; margin-top: 1.5mm; }
+</style>
+</head>
+<body>
+<div class="aide">
+  <strong>Impression :</strong> à 100 %, sans « ajuster à la page ». Les 4 codes des plafonds sortent en grand (15 cm), un par page,
+  pour être scannés à 2 ou 3 m. Le code écrit sous chaque QR permet de le taper si la caméra refuse.
+  La petite ligne grise indique où poser chaque carte. La dernière page est la carte de la régie : à garder pour toi.
+</div>
+<div id="pages"></div>
+<script src="config.js"></script>
+<script src="lib/qrcode.js"></script>
+<script>
+(function () {
+  var C = self.TREFLE, petites = [], grandes = [], regie = [];
+  // Où poser chaque QR (repère discret pour les maîtres du jeu, voir le classeur).
+  var LIEU = {
+    "TREFLE-R-VOLET": "capsule rouge (pêche)", "TREFLE-R-PLAFOND": "plafond du garage", "TREFLE-R-MEMORY": "boîte de jeu n°1",
+    "TREFLE-R-HAIE": "salle de jeux, cachette n°1",
+    "TREFLE-B-VOLET": "enveloppe de départ", "TREFLE-B-PLAFOND": "plafond du couloir du sous-sol", "TREFLE-B-MEMORY": "boîte de jeu n°2",
+    "TREFLE-B-HAIE": "salle de jeux, cachette n°2",
+    "TREFLE-V-MEMORY": "boîte de jeu n°3", "TREFLE-V-HAIE": "salle de jeux, cachette n°3", "TREFLE-V-VOLET": "capsule verte (pêche)",
+    "TREFLE-V-PLAFOND": "charpente de l'abri de jardin",
+    "TREFLE-J-HAIE": "enveloppe de départ", "TREFLE-J-VOLET": "capsule jaune (pêche)", "TREFLE-J-PLAFOND": "tronc du saule, à 2 m",
+    "TREFLE-J-MEMORY": "boîte de jeu n°4"
+  };
+  Object.keys(C.codes).forEach(function (k) {
+    var c = C.codes[k];
+    if (c.type === "regie") regie.push(k); else if (/-PLAFOND$/.test(k)) grandes.push(k); else petites.push(k);
+  });
+  function carte(k, taille) {
+    var c = C.codes[k], q = c.equipe ? C.equipes[c.equipe] : null;
+    var qr = qrcode(0, "M"); qr.addData(k); qr.make();
+    var d = document.createElement("div");
+    d.className = "carte " + taille;
+    d.style.borderColor = q ? q.couleur : "#241c14";
+    var coins = q ? '<div class="coin hg" style="color:' + q.couleur + '">' + q.symbole + '</div><div class="coin bd" style="color:' + q.couleur + '">' + q.symbole + "</div>" : "";
+    d.innerHTML = coins + qr.createSvgTag({ scalable: true, margin: 2 }) +
+      '<div class="reserve">' + (q ? "Réservé à l'équipe " + q.nom : "Régie — ne pas distribuer") + "</div>" +
+      '<div class="code">' + k + "</div>" +
+      (LIEU[k] ? '<div class="lieu">' + LIEU[k] + "</div>" : "");
+    return d;
+  }
+  var racine = document.getElementById("pages");
+  function page(liste, taille, parPage) {
+    for (var i = 0; i < liste.length; i += parPage) {
+      var p = document.createElement("div"); p.className = "page" + (parPage === 1 ? " une" : "");
+      liste.slice(i, i + parPage).forEach(function (k) { p.appendChild(carte(k, taille)); });
+      racine.appendChild(p);
+    }
+  }
+  page(petites, "petite", 6);
+  page(grandes, "grande", 1);
+  page(regie, "petite", 1);
+})();
+</script>
+</body>
+</html>
