@@ -343,7 +343,23 @@
       html += '<div class="message-corbeau" id="m' + i + '"><button class="btn" data-m="' + i + '">▶ ' + esc(m.titre) + "</button>" +
         '<div class="fiche"><p class="recit">' + esc(m.texte) + "</p></div></div>";
     });
+    html += '<h2>Ce téléphone</h2><p class="petit">Efface l\'équipe choisie, les indices trouvés et la partie de Qui est-ce. Le jeu reste en mémoire pour fonctionner sans réseau.</p>' +
+      '<button class="btn discret" id="reinit">Réinitialiser ce téléphone</button>';
     app.innerHTML = html; liens();
+    var armee = null, bReinit = document.getElementById("reinit");
+    bReinit.addEventListener("click", function () {
+      if (!armee) { // premier toucher : demande de confirmation
+        bReinit.textContent = "Toucher encore pour confirmer";
+        armee = setTimeout(function () { armee = null; bReinit.textContent = "Réinitialiser ce téléphone"; }, 4000);
+        return;
+      }
+      clearTimeout(armee); armee = null;
+      try {
+        Object.keys(localStorage).forEach(function (k) { if (k.indexOf("trefle.progression.") === 0) efface(k); });
+      } catch (e) {}
+      efface(CLE_EQUIPE); efface(CLE_QUI);
+      vibre([60, 40, 60]); aller("#/");
+    });
     app.querySelectorAll("[data-d]").forEach(function (b) {
       b.addEventListener("click", function () { ecrire(CLE_DECALAGE, String(parseInt(lire(CLE_DECALAGE) || "0", 10) + parseInt(b.getAttribute("data-d"), 10))); tic(); });
     });
