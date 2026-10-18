@@ -156,7 +156,13 @@ p { margin: 0; }
 .horloge.urgent { color: #ff6b6b; }
 .reglages { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .reglages .btn { padding: 12px 4px; font-size: 16px; }
-.message-corbeau { display: grid; gap: 8px; }
+.message-corbeau { display: grid; gap: 8px; margin-bottom: 14px; }
+.message-corbeau .titre-message { font: 400 17px var(--machine); color: var(--papier); margin: 0; }
+.lecteur { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px; }
+.lecteur .btn { padding: 14px 6px; font-size: 18px; }
+.barre-lecture { height: 6px; border-radius: 3px; background: #ffffff22; overflow: hidden; }
+.barre-lecture .avance { height: 100%; width: 0; background: var(--tampon, #a3201b); transition: width .25s linear; }
+.message-corbeau .temps { margin: 0; text-align: right; }
 .message-corbeau .fiche { display: none; }
 .message-corbeau.ouvert .fiche { display: grid; }
 

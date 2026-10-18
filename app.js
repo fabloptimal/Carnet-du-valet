@@ -376,7 +376,11 @@
       '<button class="btn discret" data-d="1">+1 min</button><button class="btn discret" data-d="5">+5 min</button></div>' +
       '<button class="btn discret" id="raz">Remettre à l\'heure prévue</button><h2>Le Corbeau</h2>';
     C.corbeau.forEach(function (m, i) {
-      html += '<div class="message-corbeau" id="m' + i + '"><button class="btn" data-m="' + i + '">▶ ' + esc(m.titre) + "</button>" +
+      html += '<div class="message-corbeau" id="m' + i + '"><p class="titre-message">' + esc(m.titre) + "</p>" +
+        '<div class="lecteur"><button class="btn" data-lire="' + i + '" aria-label="Lecture">▶</button>' +
+        '<button class="btn discret" data-recul="' + i + '" aria-label="Reculer de 10 secondes">↺ 10 s</button>' +
+        '<button class="btn discret" data-debut="' + i + '" aria-label="Revenir au début">⏮</button></div>' +
+        '<div class="barre-lecture"><div class="avance" id="av' + i + '"></div></div><p class="petit temps" id="t' + i + '">0:00</p>' +
         '<div class="fiche"><p class="recit">' + esc(m.texte) + "</p></div></div>";
     });
     html += '<h2>Ce téléphone</h2><p class="petit">Efface l\'équipe choisie, les indices trouvés et la partie de Qui est-ce. Le jeu reste en mémoire pour fonctionner sans réseau.</p>' +
@@ -400,15 +404,58 @@
       b.addEventListener("click", function () { ecrire(CLE_DECALAGE, String(parseInt(lire(CLE_DECALAGE) || "0", 10) + parseInt(b.getAttribute("data-d"), 10))); tic(); });
     });
     document.getElementById("raz").addEventListener("click", function () { efface(CLE_DECALAGE); tic(); });
-    var lecteur = null;
-    app.querySelectorAll("[data-m]").forEach(function (b) {
+    // Un seul lecteur pour les 3 messages : impossible de lancer deux fois le même son en même temps.
+    var son = new Audio(), courant = -1;
+    son.preload = "auto";
+    function mm(x) { x = Math.floor(x || 0); return Math.floor(x / 60) + ":" + pad(x % 60); }
+    function majBoutons() {
+      app.querySelectorAll("[data-lire]").forEach(function (b) {
+        var actif = +b.getAttribute("data-lire") === courant && !son.paused;
+        b.textContent = actif ? "❚❚" : "▶"; b.setAttribute("aria-label", actif ? "Pause" : "Lecture");
+      });
+    }
+    function majTemps() {
+      if (courant < 0) return;
+      var t = document.getElementById("t" + courant), av = document.getElementById("av" + courant);
+      if (!t) return;
+      t.textContent = mm(son.currentTime) + (isFinite(son.duration) ? " / " + mm(son.duration) : "");
+      av.style.width = (isFinite(son.duration) && son.duration ? 100 * son.currentTime / son.duration : 0) + "%";
+    }
+    function charger(i) {
+      if (courant === i) return;
+      son.pause();
+      if (courant >= 0) { var av = document.getElementById("av" + courant); if (av) av.style.width = "0%"; }
+      courant = i; son.src = C.corbeau[i].audio; son.currentTime = 0;
+    }
+    function jouer(i) {
+      charger(i);
+      var p = son.play();
+      if (p && p.catch) p.catch(function () { document.getElementById("m" + i).classList.add("ouvert"); });
+    }
+    son.addEventListener("play", majBoutons); son.addEventListener("pause", majBoutons);
+    son.addEventListener("ended", function () { majBoutons(); majTemps(); });
+    son.addEventListener("timeupdate", majTemps); son.addEventListener("loadedmetadata", majTemps);
+    son.addEventListener("error", function () { if (courant >= 0) document.getElementById("m" + courant).classList.add("ouvert"); });
+    app.querySelectorAll("[data-lire]").forEach(function (b) {
       b.addEventListener("click", function () {
-        var i = +b.getAttribute("data-m"), m = C.corbeau[i];
-        if (lecteur) { lecteur.pause(); lecteur = null; }
-        var a = new Audio(m.audio);
-        a.play().then(function () { lecteur = a; }).catch(function () { document.getElementById("m" + i).classList.add("ouvert"); });
+        var i = +b.getAttribute("data-lire");
+        if (courant === i && !son.paused) son.pause(); else jouer(i);
       });
     });
+    app.querySelectorAll("[data-recul]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var i = +b.getAttribute("data-recul");
+        if (courant !== i) return; son.currentTime = Math.max(0, son.currentTime - 10); majTemps();
+      });
+    });
+    app.querySelectorAll("[data-debut]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var i = +b.getAttribute("data-debut");
+        if (courant !== i) charger(i); son.currentTime = 0; majTemps();
+      });
+    });
+    // On quitte la régie : le son s'arrête.
+    window.addEventListener("hashchange", function stop() { son.pause(); window.removeEventListener("hashchange", stop); });
     function tic() {
       var reste = Math.max(0, Math.round((cible() - Date.now()) / 1000));
       var h = Math.floor(reste / 3600), mn = Math.floor(reste % 3600 / 60), s = reste % 60;
