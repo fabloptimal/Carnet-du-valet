@@ -10,7 +10,7 @@ self.TREFLE = {
 
   // Changer ce numéro à chaque mise en ligne d'une nouvelle version :
   // les téléphones rechargent alors tout le contenu.
-  version: "2026-10-18e",
+  version: "2026-10-18f",
 
   // Adresse publique du jeu (sert aux 4 QR de départ). Ne plus la changer une fois les QR imprimés.
   adresse: "https://fabloptimal.github.io/Carnet-du-valet/",
@@ -68,9 +68,9 @@ self.TREFLE = {
   // Les 3 messages du Corbeau. Si le fichier audio manque, la régie affiche le texte à lire.
   corbeau: [
     { titre: "Message 1 — fin de l'acte 1", audio: "assets/audio/corbeau-1.mp3",
-      texte: "(Annonce) Vous écoutez 395 NM, la radio qui dévoile tout, la nuit comme le jour. — … Allô ? Ça enregistre ? Bon. Alors comme ça, on lit le carnet de mon vieux copain le Valet ? Moi, c'est le Corbeau. Je suis sorti ce matin. Vingt ans que je compte les jours… et ça se termine ce soir. Ce trésor, c'est le mien. Cherchez, cherchez… Je vous regarde. Et quand la nuit tombera, je passerai. (grand croassement)" },
+      texte: "(Annonce) Vous écoutez 395 NM, la radio qui dévoile tout, la nuit comme le jour. — … Allô ? Ça enregistre ? Bon. Alors comme ça, on lit le carnet de mon vieux copain le Valet ? Moi, c'est le Corbeau. Je suis sorti ce matin. Vingt ans que je compte les jours… et ça se termine ce soir. Ce trésor, c'est le mien. Cherchez, cherchez… Je vous regarde. Et quand la nuit tombera, je passerai." },
     { titre: "Message 2 — ouverture de l'acte 2", audio: "assets/audio/corbeau-2.mp3",
-      texte: "Bonsoir, et bienvenue sur 395 NM, la radio des mauvais garçons. Ce soir, émission spéciale : les disques préférés du Valet. Chaque titre que vous reconnaîtrez vous rapportera une lettre. Mettez les lettres bout à bout : elles vous diront où il a rangé ce qui lui servait le plus, le soir venu. Restez avec nous… 395 NM, la radio qui dévoile tout, la nuit comme le jour." },
+      texte: "(Annonce) Vous écoutez 395 NM, la radio qui dévoile tout, la nuit comme le jour. — … Bonsoir. Je vous avais dit que je passerais à la nuit tombée. Me voilà. Vous avez cherché toute la journée… et maintenant, il fait noir. Pas de chance. Mais je suis beau joueur. Le Valet avait ses disques, toujours les mêmes, il les passait le soir. Je vais vous les faire écouter. Chaque chanson que vous reconnaîtrez vous donnera une lettre. À la fin, les lettres vous diront où chercher. Ratez-en trop… et vous resterez dans le noir. Allez. On commence." },
     { titre: "Message 3 — après l'ouverture des coffres", audio: "assets/audio/corbeau-3.mp3",
       texte: "(Annonce) Vous écoutez 395 NM, la radio qui dévoile tout, la nuit comme le jour. — Quoi ?! Vous l'avez trouvé ? … Bon. C'est l'heure. Il est à vous, c'est la loi. Bien joué. Le Valet serait fier de vous… D'ailleurs, vous ne vous êtes jamais demandé qui c'était, le Valet ? Regardez bien autour de vous…" }
   ],
