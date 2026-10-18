@@ -48,6 +48,7 @@
   /* ---------- routeur ---------- */
   function route() {
     stopCamera(); stopMinuterie();
+    document.body.classList.remove("mode-qui");
     var h = location.hash || "#/";
     couleur(equipe());
     window.scrollTo(0, 0);
@@ -304,34 +305,30 @@
     function sauver() { ecrire(CLE_QUI, JSON.stringify(etat)); }
     var q = C.equipes[e];
     var choix = etat.secret === null;
-    var html = bandeau("#/qui-equipe") + "<h1>Qui est-ce ?</h1>";
+    var html = bandeau("#/qui-equipe") + '<div class="qui"><div class="qui-barre"><h1>Qui est-ce ?</h1>';
     if (choix) {
       html += '<p>Choisissez <strong>en secret</strong> le suspect que l\'équipe adverse devra trouver. Cachez l\'écran.</p>';
     } else {
       var s = C.suspects[etat.secret];
-      html += '<div class="fiche" style="grid-template-columns:72px 1fr;align-items:center"><img src="' + s.image + '" alt="" id="secret-img" style="width:72px;filter:blur(14px)">' +
-        '<div><strong>Votre suspect secret</strong><br><button class="lien" id="voir" style="color:var(--encre)">Afficher</button></div></div>' +
-        '<div class="horloge" id="chrono" style="font-size:56px">' + pad(C.dureeDuel) + ':00</div>' +
+      html += '<div class="qui-secret"><img src="' + s.image + '" alt="" id="secret-img" class="flou">' +
+        '<div><strong>Votre suspect</strong><br><button class="lien" id="voir">Afficher</button></div></div>' +
+        '<div class="horloge" id="chrono">' + pad(C.dureeDuel) + ':00</div>' +
         '<button class="btn principal" id="go">Lancer le chrono (' + C.dureeDuel + ' min)</button>' +
-        '<p class="petit" id="reste"></p>';
+        '<p class="petit" id="reste"></p>' +
+        '<details class="qui-questions"><summary>Les 7 questions</summary><ol>' +
+        C.questions.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ol></details>";
     }
-    html += '<div class="memory" id="grille" style="grid-template-columns:repeat(auto-fill,minmax(110px,1fr))"></div>';
-    if (!choix) {
-      html += '<details class="fiche"><summary><strong>Les 7 questions autorisées</strong></summary><ol>' +
-        C.questions.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ol></details>" +
-        '<button class="btn discret" id="raz">Nouvelle partie</button>';
-    }
+    html += '</div><div class="qui-grille" id="grille"></div>';
+    if (!choix) html += '<button class="btn discret qui-raz" id="raz">Nouvelle partie</button>';
+    html += "</div>";
     app.innerHTML = html; liens();
+    document.body.classList.add("mode-qui");
     var grille = document.getElementById("grille");
     C.suspects.forEach(function (s, i) {
       var b = document.createElement("button");
-      b.className = "carte" + (etat.barres.indexOf(i) >= 0 ? " barre" : "");
-      b.style.aspectRatio = "3 / 4.4";
-      b.innerHTML = '<div style="background:var(--papier);color:var(--encre);border-radius:6px;padding:4px;height:100%;display:grid;grid-template-rows:minmax(0,1fr) auto;position:relative">' +
-        '<img src="' + s.image + '" alt="" style="width:100%;height:100%;min-height:0;object-fit:cover;object-position:center 30%;border-radius:3px">' +
-        '<span style="font:400 13px var(--machine);text-align:center;padding-top:3px">' + esc(s.nom) + "</span>" +
-        '<span class="x" style="position:absolute;inset:0;display:none;place-items:center;font:400 90px/1 var(--machine);color:var(--tampon)">✕</span></div>';
-      function maj() { var barre = etat.barres.indexOf(i) >= 0; b.querySelector(".x").style.display = barre ? "grid" : "none"; b.style.opacity = barre ? ".45" : "1"; }
+      b.className = "suspect";
+      b.innerHTML = '<img src="' + s.image + '" alt=""><span class="nom">' + esc(s.nom) + '</span><span class="x">✕</span>';
+      function maj() { b.classList.toggle("barre", etat.barres.indexOf(i) >= 0); }
       maj();
       b.addEventListener("click", function () {
         if (choix) { etat.secret = i; etat.barres = []; sauver(); return vueQui(); }
@@ -344,8 +341,8 @@
     function compte() { document.getElementById("reste").textContent = (24 - etat.barres.length) + " suspects encore possibles."; }
     compte();
     document.getElementById("voir").addEventListener("click", function () {
-      var im = document.getElementById("secret-img"), cache = im.style.filter !== "none";
-      im.style.filter = cache ? "none" : "blur(14px)"; this.textContent = cache ? "Cacher" : "Afficher";
+      var im = document.getElementById("secret-img"), cache = im.classList.toggle("flou");
+      this.textContent = cache ? "Afficher" : "Cacher";
     });
     var raz = document.getElementById("raz"), armer = false;
     raz.addEventListener("click", function () {
