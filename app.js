@@ -384,7 +384,8 @@
         '<div class="fiche"><p class="recit">' + esc(m.texte) + "</p></div></div>";
     });
     html += '<h2>Ce téléphone</h2><p class="petit">Efface l\'équipe choisie, les indices trouvés et la partie de Qui est-ce. Le jeu reste en mémoire pour fonctionner sans réseau.</p>' +
-      '<button class="btn discret" id="reinit">Réinitialiser ce téléphone</button>';
+      '<button class="btn discret" id="reinit">Réinitialiser ce téléphone</button>' +
+      '<p class="petit" style="text-align:center;opacity:.6">Version ' + esc(C.version) + '</p>';
     app.innerHTML = html; liens();
     var armee = null, bReinit = document.getElementById("reinit");
     bReinit.addEventListener("click", function () {
@@ -468,7 +469,15 @@
   }
 
   /* ---------- démarrage ---------- */
-  if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js?v=" + encodeURIComponent(C.version)).catch(function () {});
+  if ("serviceWorker" in navigator) {
+    // Quand une nouvelle version prend la main, la page se recharge une fois d'elle-même.
+    var dejaRecharge = false;
+    navigator.serviceWorker.addEventListener("controllerchange", function () {
+      if (dejaRecharge) return; dejaRecharge = true; location.reload();
+    });
+    navigator.serviceWorker.register("sw.js?v=" + encodeURIComponent(C.version))
+      .then(function (reg) { reg.update().catch(function () {}); }).catch(function () {});
+  }
   window.addEventListener("hashchange", route);
   document.addEventListener("visibilitychange", function () { if (document.hidden) stopCamera(); else if (location.hash === "#/scan") route(); });
   route();
