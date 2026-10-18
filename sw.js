@@ -32,11 +32,29 @@ self.addEventListener("activate", function (e) {
 
 self.addEventListener("fetch", function (e) {
   if (e.request.method !== "GET") return;
+  var url = new URL(e.request.url);
+  if (url.origin !== self.location.origin) return;
+  // Le code et les textes du jeu (page, .js, .css, .webmanifest) : réseau d'abord, pour que
+  // chaque mise à jour arrive tout de suite ; sans réseau (ou après 3 s), la copie en mémoire.
+  var code = e.request.mode === "navigate" || /\.(js|css|html|webmanifest)$/.test(url.pathname) || url.pathname.slice(-1) === "/";
+  if (code) {
+    e.respondWith(caches.open(CACHE).then(function (c) {
+      var memoire = function () { return c.match(e.request, { ignoreSearch: true }).then(function (r) { return r || c.match("index.html"); }); };
+      var reseau = fetch(e.request, { cache: "no-cache" }).then(function (rep) {
+        if (rep.ok) c.put(e.request, rep.clone());
+        return rep;
+      });
+      var delai = new Promise(function (ok) { setTimeout(ok, 3000); }).then(memoire);
+      return Promise.race([reseau, delai]).then(function (r) { return r || reseau; }).catch(memoire);
+    }));
+    return;
+  }
+  // Photos, polices, sons : la copie en mémoire d'abord (rapide, et marche sans réseau).
   e.respondWith(caches.open(CACHE).then(function (c) {
     return c.match(e.request, { ignoreSearch: true }).then(function (r) {
       if (r) return r;
       return fetch(e.request).then(function (rep) {
-        if (rep.ok && new URL(e.request.url).origin === self.location.origin) c.put(e.request, rep.clone());
+        if (rep.status === 200) c.put(e.request, rep.clone());
         return rep;
       });
     });
