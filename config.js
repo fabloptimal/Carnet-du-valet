@@ -10,7 +10,7 @@ self.TREFLE = {
 
   // Changer ce numéro à chaque mise en ligne d'une nouvelle version :
   // les téléphones rechargent alors tout le contenu.
-  version: "2026-10-18-qui-paysage",
+  version: "2026-10-19-044332",
 
   // Adresse publique du jeu (sert aux 4 QR de départ). Ne plus la changer une fois les QR imprimés.
   adresse: "https://fabloptimal.github.io/Carnet-du-valet/",
@@ -85,7 +85,7 @@ self.TREFLE = {
     "TREFLE-R-VOLET": {
       equipe: "R", type: "puzzle", image: "assets/photos/volet-rouge.jpg",
       titre: "Une page du carnet, retrouvée…",
-      fin: "Pour me lire, il faut me fermer. Que les uns me baissent de l'intérieur, que les autres lisent dehors."
+      fin: "Pour me lire, il faut me fermer. Que les uns me baissent de l'intérieur, que les autres lisent dehors. Puis remontez-moi."
     },
     "TREFLE-R-PLAFOND": {
       equipe: "R", type: "texte", titre: "Le Valet a levé les yeux…",
@@ -106,7 +106,7 @@ self.TREFLE = {
     "TREFLE-B-VOLET": {
       equipe: "B", type: "puzzle", image: "assets/photos/volet-bleu.jpg",
       titre: "Une page du carnet, retrouvée…",
-      fin: "Pour me lire, il faut me fermer. Que les uns me baissent de l'intérieur, que les autres lisent dehors."
+      fin: "Pour me lire, il faut me fermer. Que les uns me baissent de l'intérieur, que les autres lisent dehors. Puis remontez-moi."
     },
     "TREFLE-B-PLAFOND": {
       equipe: "B", type: "texte", titre: "Le Valet marchait le nez en l'air…",
@@ -136,11 +136,11 @@ self.TREFLE = {
     "TREFLE-V-VOLET": {
       equipe: "V", type: "puzzle", image: "assets/photos/volet-vert.jpg",
       titre: "Une page du carnet, retrouvée…",
-      fin: "Pour me lire, il faut me fermer. Que les uns me baissent de l'intérieur, que les autres lisent dehors."
+      fin: "Pour me lire, il faut me fermer. Que les uns me baissent de l'intérieur, que les autres lisent dehors. Puis remontez-moi."
     },
     "TREFLE-V-PLAFOND": {
       equipe: "V", type: "texte", titre: "Le Valet gardait ses secrets au sec…",
-      texte: "Tu as tout. Rejoins la table du Valet, au salon."
+      texte: "Si tu as tes 4 morceaux et ta clé, rejoins la table du Valet, au salon. Sinon, ce n'est pas encore ton heure : poursuis ta route, tu reviendras ici."
     },
 
     /* ---------------- JAUNE ♦ ---------------- */
