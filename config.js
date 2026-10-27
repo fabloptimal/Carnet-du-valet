@@ -10,7 +10,7 @@ self.TREFLE = {
 
   // Changer ce numéro à chaque mise en ligne d'une nouvelle version :
   // les téléphones rechargent alors tout le contenu.
-  version: "2026-10-19-141644",
+  version: "2026-10-27-0450",
 
   // Adresse publique du jeu (sert aux 4 QR de départ). Ne plus la changer une fois les QR imprimés.
   adresse: "https://fabloptimal.github.io/Carnet-du-valet/",
@@ -72,7 +72,7 @@ self.TREFLE = {
     { titre: "Message 2 — ouverture de l'acte 2", audio: "assets/audio/corbeau-2.mp3",
       texte: "(Annonce) Vous écoutez 395 NM, la radio qui dévoile tout, la nuit comme le jour. — … Bonsoir. Je vous avais dit que je passerais à la nuit tombée. Me voilà. Vous avez cherché toute la journée… et maintenant, il fait noir. Pas de chance. Mais je suis beau joueur. Le Valet avait ses disques, toujours les mêmes, il les passait le soir. Je vais vous les faire écouter. Chaque chanson que vous reconnaîtrez vous donnera une lettre. À la fin, les lettres vous diront où chercher. Ratez-en trop… et vous resterez dans le noir. Allez. On commence." },
     { titre: "Message 3 — après l'ouverture des coffres", audio: "assets/audio/corbeau-3.mp3",
-      texte: "(Annonce) Vous écoutez 395 NM, la radio qui dévoile tout, la nuit comme le jour. — Quoi ?! Vous l'avez trouvé ? … Bon. C'est l'heure. Il est à vous, c'est la loi. Bien joué. Moi, vingt ans à relire ses gribouillis sans y comprendre un mot… et vous, en une soirée. Le Valet serait fier de vous… D'ailleurs, vous ne vous êtes jamais demandé qui c'était, le Valet ? Regardez bien autour de vous…" }
+      texte: "(Annonce) Vous écoutez 395 NM, la radio qui dévoile tout, la nuit comme le jour. — Quoi ?! Vous l'avez trouvé ? … Bon. C'est l'heure. Il est à vous, c'est la loi. Et moi, si je touche à un seul de ces bijoux, je repars pour vingt ans. Non merci. Bien joué. Moi, vingt ans à relire ses gribouillis sans y comprendre un mot… et vous, en une soirée. Le Valet serait fier de vous… D'ailleurs, vous ne vous êtes jamais demandé qui c'était, le Valet ? Regardez bien autour de vous…" }
   ],
 
   /* ----------------------------------------------------------
@@ -88,15 +88,18 @@ self.TREFLE = {
       fin: "Pour me lire, il faut me fermer. Que les uns me baissent de l'intérieur, que les autres lisent dehors. Puis remontez-moi."
     },
     "TREFLE-R-PLAFOND": {
+      apres: "TREFLE-R-VOLET",
       equipe: "R", type: "texte", titre: "Le Valet a levé les yeux…",
-      texte: "Au royaume des jeux, sous la maison, cherche la boîte :",
-      anagramme: "À REMPLIR (boîte n°1)"
+      texte: "Personne ne fouille une boîte de jeu : c'est là que le Valet rangeait ce qui comptait. Au royaume des jeux, sous la maison, cherche la boîte :",
+      anagramme: "MOI, TOM", signature: "— V."
     },
     "TREFLE-R-MEMORY": {
+      apres: "TREFLE-R-PLAFOND",
       equipe: "R", type: "memory",
-      fin: "Bravo, petit Valet. Ton morceau de page dort À REMPLIR (cachette n°1 de la salle de jeux)."
+      fin: "Bravo, petit Valet. Ton morceau de page dort contre un pied du baby-foot."
     },
     "TREFLE-R-HAIE": {
+      apres: "TREFLE-R-MEMORY",
       equipe: "R", type: "puzzle", image: "assets/photos/haie-rouge.jpg",
       titre: "Où le Trèfle a-t-il creusé ?",
       fin: "Dos à la petite porte, longe la haie en t'éloignant du portail. Au pied du 6ᵉ sapin, le Trèfle a enterré sa page."
@@ -109,59 +112,68 @@ self.TREFLE = {
       fin: "Pour me lire, il faut me fermer. Que les uns me baissent de l'intérieur, que les autres lisent dehors. Puis remontez-moi."
     },
     "TREFLE-B-PLAFOND": {
+      apres: "TREFLE-B-VOLET",
       equipe: "B", type: "texte", titre: "Le Valet marchait le nez en l'air…",
-      texte: "Au royaume des jeux, sous la maison, cherche la boîte :",
-      anagramme: "À REMPLIR (boîte n°2)"
+      texte: "Personne ne fouille une boîte de jeu : c'est là que le Valet rangeait ce qui comptait. Au royaume des jeux, sous la maison, cherche la boîte :",
+      anagramme: "PAUL GOURO", signature: "— V."
     },
     "TREFLE-B-MEMORY": {
+      apres: "TREFLE-B-PLAFOND",
       equipe: "B", type: "memory",
-      fin: "Bravo, petit Valet. Ton morceau de page dort À REMPLIR (cachette n°2 de la salle de jeux)."
+      fin: "Bravo, petit Valet. Ton morceau de page dort dans la portière de la petite voiture rouge et jaune."
     },
     "TREFLE-B-HAIE": {
+      apres: "TREFLE-B-MEMORY",
       equipe: "B", type: "puzzle", image: "assets/photos/haie-bleu.jpg",
       titre: "Où le Trèfle a-t-il creusé ?",
-      fin: "Depuis le coin de la haie en haut à droite, descends le long de la haie vers la piscine. Au pied du 5ᵉ sapin, le Trèfle a enterré sa page."
+      fin: "Les sapins gardent un salon secret, à l'abri des regards. Le Valet y a laissé de quoi lire."
     },
 
     /* ---------------- VERTE ♣ ---------------- */
     "TREFLE-V-MEMORY": {
       equipe: "V", type: "memory",
-      fin: "Bravo, petit Valet. Ton morceau de page dort À REMPLIR (cachette n°3 de la salle de jeux)."
+      fin: "Bravo, petit Valet. Ton morceau de page dort derrière la porte du placard du bar."
     },
     "TREFLE-V-HAIE": {
+      apres: "TREFLE-V-MEMORY",
       equipe: "V", type: "puzzle", image: "assets/photos/haie-vert.jpg",
       titre: "Où le Trèfle a-t-il creusé ?",
       fin: "Dos à l'abri de jardin, longe la haie du haut en direction du saule. Au pied du 8ᵉ sapin, le Trèfle a enterré sa page."
     },
     "TREFLE-V-VOLET": {
+      apres: "TREFLE-V-HAIE",
       equipe: "V", type: "puzzle", image: "assets/photos/volet-vert.jpg",
       titre: "Une page du carnet, retrouvée…",
       fin: "Pour me lire, il faut me fermer. Que les uns me baissent de l'intérieur, que les autres lisent dehors. Puis remontez-moi."
     },
     "TREFLE-V-PLAFOND": {
+      apres: "TREFLE-V-VOLET",
       equipe: "V", type: "texte", titre: "Le Valet gardait ses secrets au sec…",
-      texte: "Si tu as tes 4 morceaux et ta clé, rejoins la table du Valet, au salon. Sinon, ce n'est pas encore ton heure : poursuis ta route, tu reviendras ici."
+      texte: "Tu as tes 4 morceaux et ta clé. Rejoins la table du Valet, au salon, et montre cet écran à la régie : c'est ton laissez-passer."
     },
 
     /* ---------------- JAUNE ♦ ---------------- */
     "TREFLE-J-HAIE": {
       equipe: "J", type: "puzzle", image: "assets/photos/haie-jaune.jpg",
       titre: "Où le Trèfle a-t-il creusé ?",
-      fin: "Depuis le coin de la haie derrière la piscine, longe la haie du bas en direction de la maison. Au pied du 7ᵉ sapin, le Trèfle a enterré sa page."
+      fin: "Dans cette rangée qui monte la garde, un seul soldat est tombé. C'est lui qui n'a jamais trahi le secret du Valet."
     },
     "TREFLE-J-VOLET": {
+      apres: "TREFLE-J-HAIE",
       equipe: "J", type: "puzzle", image: "assets/photos/volet-jaune.jpg",
       titre: "Une page du carnet, retrouvée…",
       fin: "Le Valet glissait ses secrets entre le bois et le mur."
     },
     "TREFLE-J-PLAFOND": {
+      apres: "TREFLE-J-VOLET",
       equipe: "J", type: "texte", titre: "Le Valet guettait sous le saule…",
-      texte: "Au royaume des jeux, sous la maison, cherche la boîte :",
-      anagramme: "À REMPLIR (boîte n°4)"
+      texte: "Personne ne fouille une boîte de jeu : c'est là que le Valet rangeait ce qui comptait. Au royaume des jeux, sous la maison, cherche la boîte :",
+      anagramme: "DODO D'ÉLI", signature: "— V."
     },
     "TREFLE-J-MEMORY": {
+      apres: "TREFLE-J-PLAFOND",
       equipe: "J", type: "memory",
-      fin: "Bravo, petit Valet. Ton morceau de page dort À REMPLIR (cachette n°4 de la salle de jeux). Ensuite, rejoins la table du Valet, au salon."
+      fin: "Bravo, petit Valet. Ton morceau de page dort contre le pied de la grande table. Ensuite, rejoins la table du Valet, au salon."
     },
 
     /* ---------------- RÉGIE ---------------- */

@@ -43,6 +43,34 @@
     if (i < 0) p.push({ code: code, resolu: !!resolu }); else if (resolu) p[i].resolu = true;
     ecrire(cleProg(e), JSON.stringify(p));
   }
+  /* ---------- verrou : chaque code ne s'ouvre qu'après le précédent du parcours ---------- */
+  function cleDeblocage(e) { return "trefle.deblocage." + e; }
+  function codeRegie() { return Object.keys(C.codes).filter(function (k) { return C.codes[k].type === "regie"; })[0]; }
+  function ouvert(code, c) {
+    if (!c.apres) return true;
+    var e = equipe(); if (lire(cleDeblocage(e)) === "1") return true;
+    var p = lireJSON(cleProg(e), []), avant = [].concat(c.apres);
+    if (p.some(function (x) { return x.code === code; })) return true;
+    return avant.some(function (a) { return p.some(function (x) { return x.code === a; }); });
+  }
+  function formulaireMJ(apres) {
+    return '<details class="mj"><summary>Maître du jeu</summary><p class="petit">Après un raccourci, ou si l\'équipe a changé de téléphone : taper le code de la régie pour débloquer toutes les étapes de cette équipe.</p>' +
+      '<input id="mjcode" autocomplete="off" autocapitalize="characters" placeholder="Code de la régie"><button class="btn" id="mjok">Débloquer</button><p id="mjmsg" class="petit"></p></details>';
+  }
+  function brancherMJ(suite) {
+    var b = document.getElementById("mjok"); if (!b) return;
+    b.addEventListener("click", function () {
+      var v = document.getElementById("mjcode").value.trim().toUpperCase().replace(/\s+/g, "");
+      if (v === codeRegie()) { ecrire(cleDeblocage(equipe()), "1"); document.getElementById("mjmsg").textContent = "Débloqué."; setTimeout(suite, 400); }
+      else document.getElementById("mjmsg").textContent = "Code incorrect.";
+    });
+  }
+  function vuePasEncore(code) {
+    app.innerHTML = bandeau() + '<div class="fiche refus"><div class="gros">⏳</div><span class="tampon frappe">PAS ENCORE</span><h2>Ce n\'est pas encore ton heure</h2>' +
+      "<p>Ce code viendra plus tard dans ton parcours. Remets-le exactement où tu l'as trouvé et poursuis ta route.</p></div>" +
+      '<button class="btn" data-go="#/">Accueil</button>' + formulaireMJ();
+    liens(); brancherMJ(function () { route(); });
+  }
   function etiquette(code) { var k = code.split("-").pop(); return ETAPES[k] || code; }
 
   /* ---------- routeur ---------- */
@@ -92,8 +120,8 @@
       '<button class="btn principal" data-go="#/scan">Scanner un code</button>' +
       fil +
       '<div id="etat" class="etat">Vérification du mode hors ligne…</div>' +
-      '<p class="petit">Un seul téléphone par équipe. Ne fermez pas cette page pendant le jeu.</p>';
-    liens(); verifierHorsLigne();
+      '<p class="petit">Un seul téléphone par équipe. Ne fermez pas cette page pendant le jeu.</p>' + formulaireMJ();
+    liens(); brancherMJ(function () { route(); }); verifierHorsLigne();
   }
 
   function fichiers() {
@@ -173,6 +201,7 @@
         '<button class="btn" data-go="#/">Accueil</button>';
       return liens();
     }
+    if (!ouvert(code, c)) return vuePasEncore(code);
     noter(code, false);
     if (c.type === "texte") { noter(code, true); return vueTexte(c); }
     if (c.type === "puzzle") return vuePuzzle(c, code);
@@ -181,7 +210,7 @@
 
   function vueTexte(c) {
     app.innerHTML = bandeau() + '<div class="fiche apparait"><h2>' + esc(c.titre || "") + '</h2><p class="recit">' + esc(c.texte) +
-      (c.anagramme ? '<span class="anagramme">' + esc(c.anagramme) + "</span>" : "") + "</p></div>" +
+      (c.anagramme ? '<span class="anagramme">' + esc(c.anagramme) + "</span>" + (c.signature ? '<span class="signature">' + esc(c.signature) + "</span>" : "") : "") + "</p></div>" +
       '<button class="btn discret" data-go="#/">Accueil</button>';
     liens();
   }
