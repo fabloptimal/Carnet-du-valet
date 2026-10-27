@@ -10,7 +10,7 @@ self.TREFLE = {
 
   // Changer ce numéro à chaque mise en ligne d'une nouvelle version :
   // les téléphones rechargent alors tout le contenu.
-  version: "2026-10-27-0450",
+  version: "2026-10-27-1335",
 
   // Adresse publique du jeu (sert aux 4 QR de départ). Ne plus la changer une fois les QR imprimés.
   adresse: "https://fabloptimal.github.io/Carnet-du-valet/",
@@ -72,7 +72,7 @@ self.TREFLE = {
     { titre: "Message 2 — ouverture de l'acte 2", audio: "assets/audio/corbeau-2.mp3",
       texte: "(Annonce) Vous écoutez 395 NM, la radio qui dévoile tout, la nuit comme le jour. — … Bonsoir. Je vous avais dit que je passerais à la nuit tombée. Me voilà. Vous avez cherché toute la journée… et maintenant, il fait noir. Pas de chance. Mais je suis beau joueur. Le Valet avait ses disques, toujours les mêmes, il les passait le soir. Je vais vous les faire écouter. Chaque chanson que vous reconnaîtrez vous donnera une lettre. À la fin, les lettres vous diront où chercher. Ratez-en trop… et vous resterez dans le noir. Allez. On commence." },
     { titre: "Message 3 — après l'ouverture des coffres", audio: "assets/audio/corbeau-3.mp3",
-      texte: "(Annonce) Vous écoutez 395 NM, la radio qui dévoile tout, la nuit comme le jour. — Quoi ?! Vous l'avez trouvé ? … Bon. C'est l'heure. Il est à vous, c'est la loi. Et moi, si je touche à un seul de ces bijoux, je repars pour vingt ans. Non merci. Bien joué. Moi, vingt ans à relire ses gribouillis sans y comprendre un mot… et vous, en une soirée. Le Valet serait fier de vous… D'ailleurs, vous ne vous êtes jamais demandé qui c'était, le Valet ? Regardez bien autour de vous…" }
+      texte: "(Annonce) Vous écoutez 395 NM, la radio qui dévoile tout, la nuit comme le jour. — Quoi ?! Vous l'avez trouvé ? Bon. C'est l'heure. Il est à vous, c'est la loi. Et moi, si je touche à un seul de ces bijoux, je repars pour vingt ans. Non merci. Bien joué. Moi, vingt ans à relire ses gribouillis, sans rien y comprendre… et vous, en une soirée. Le Valet serait fier de vous… D'ailleurs, vous ne vous êtes jamais demandé qui c'était, le Valet ? Regardez bien autour de vous…" }
   ],
 
   /* ----------------------------------------------------------
